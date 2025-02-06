@@ -2,9 +2,10 @@ package com.spring.api.service;
 
 import com.spring.api.entity.User;
 import com.spring.api.repository.UserRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -15,5 +16,12 @@ public class UserService {
     @Transactional
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
     }
 }

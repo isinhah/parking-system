@@ -5,14 +5,11 @@ import com.spring.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "api/v1/users")
+@RequestMapping("api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -21,5 +18,11 @@ public class UserController {
     public ResponseEntity<User> create(@RequestBody User user) {
         User newUser = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@PathVariable Long id) {
+        User userFound = userService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userFound);
     }
 }
