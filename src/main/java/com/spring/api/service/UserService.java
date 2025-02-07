@@ -7,6 +7,7 @@ import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
 import com.spring.api.web.exception.EntityNotFoundException;
+import com.spring.api.web.exception.PasswordInvalidException;
 import com.spring.api.web.exception.UsernameUniqueViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,11 +51,11 @@ public class UserService {
         User user = findById(id);
 
         if (!user.getPassword().equals(dto.getCurrentPassword())) {
-            throw new RuntimeException("Current password is incorrect");
+            throw new PasswordInvalidException("Current password is incorrect");
         }
 
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new RuntimeException("The passwords are different");
+            throw new PasswordInvalidException("The passwords are different");
         }
 
         user.setPassword(dto.getNewPassword());

@@ -9,15 +9,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionGlobalHandler {
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorMessage> noResourceFoundException(RuntimeException ex,
-                                                                HttpServletRequest request) {
+    @ExceptionHandler(PasswordInvalidException.class)
+    public ResponseEntity<ErrorMessage> PasswordInvalidException(RuntimeException ex,
+                                                                 HttpServletRequest request) {
         log.error("****** Api Error ******", ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
