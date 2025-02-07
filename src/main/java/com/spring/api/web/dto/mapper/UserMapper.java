@@ -8,6 +8,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper
 public interface UserMapper {
 
@@ -37,5 +40,11 @@ public interface UserMapper {
     @Named("mapRoleToDto")
     default String mapRoleToDto(User.Role role) {
         return role.name().replace("ROLE_", "");
+    }
+
+    static List<UserResponseDto> toDtoList(List<User> users) {
+        return users.stream()
+                .map(UserMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
     }
 }

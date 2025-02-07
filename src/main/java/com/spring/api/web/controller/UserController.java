@@ -7,6 +7,8 @@ import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +35,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
-        List<User> users = userService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+    public Page<UserResponseDto> getAll(Pageable pageable) {
+        return userService.findAll(pageable);
     }
 
     @PutMapping("/{id}")
