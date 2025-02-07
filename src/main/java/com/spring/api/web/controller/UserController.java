@@ -3,6 +3,7 @@ package com.spring.api.web.controller;
 import com.spring.api.entity.User;
 import com.spring.api.service.UserService;
 import com.spring.api.web.dto.UserCreateDto;
+import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user) {
-        User userWithUpdatedPassword = userService.alterPassword(id, user.getPassword());
-        return ResponseEntity.status(HttpStatus.OK).body(userWithUpdatedPassword);
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDto dto) {
+        UserResponseDto userWithUpdatedPassword = userService.alterPassword(id, dto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

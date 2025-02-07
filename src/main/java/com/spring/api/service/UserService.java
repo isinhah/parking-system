@@ -4,6 +4,7 @@ import com.spring.api.entity.User;
 import com.spring.api.repository.UserRepository;
 
 import com.spring.api.web.dto.UserCreateDto;
+import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +41,21 @@ public class UserService {
     }
 
     @Transactional
-    public User alterPassword(Long id, String password) {
+    public UserResponseDto alterPassword(Long id, UserPasswordDto dto) {
         User user = findById(id);
-        user.setPassword(password);
-        return user;
+
+        if (!user.getPassword().equals(dto.getCurrentPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
+            throw new RuntimeException("The passwords are different");
+        }
+
+        user.setPassword(dto.getNewPassword());
+
+        user = userRepository.save(user);
+
+        return UserMapper.INSTANCE.toDto(user);
     }
 }
