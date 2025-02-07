@@ -6,14 +6,13 @@ import com.spring.api.web.dto.UserCreateDto;
 import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateDto createDto) {
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserCreateDto createDto) {
         UserResponseDto newUserResponse = userService.save(createDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUserResponse);
     }
@@ -40,7 +39,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDto dto) {
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UserPasswordDto dto) {
         UserResponseDto userWithUpdatedPassword = userService.alterPassword(id, dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
