@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionGlobalHandler {
 
+    @ExceptionHandler(UsernameUniqueViolationException.class)
+    public ResponseEntity<ErrorMessage> UsernameUniqueViolationException(RuntimeException ex,
+                                                                        HttpServletRequest request) {
+        log.error("****** Api Error ******", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> MethodArgumentNotValidException(MethodArgumentNotValidException ex,
                                                                         HttpServletRequest request,

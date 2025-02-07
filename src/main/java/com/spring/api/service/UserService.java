@@ -2,18 +2,17 @@ package com.spring.api.service;
 
 import com.spring.api.entity.User;
 import com.spring.api.repository.UserRepository;
-
 import com.spring.api.web.dto.UserCreateDto;
 import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
+import com.spring.api.web.exception.UsernameUniqueViolationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -25,9 +24,12 @@ public class UserService {
     public UserResponseDto save(UserCreateDto createDto) {
         User userToSave = UserMapper.INSTANCE.toUser(createDto);
 
-        User savedUser = userRepository.save(userToSave);
-
-        return UserMapper.INSTANCE.toDto(savedUser);
+        try {
+            User savedUser = userRepository.save(userToSave);
+            return UserMapper.INSTANCE.toDto(savedUser);
+        } catch (DataIntegrityViolationException ex) {
+            throw new UsernameUniqueViolationException(String.format("The username - %s - already exists", createDto.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)

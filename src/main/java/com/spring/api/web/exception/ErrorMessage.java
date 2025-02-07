@@ -1,6 +1,6 @@
 package com.spring.api.web.exception;
 
-import jakarta.servlet.http.HttpServlet;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,7 @@ public class ErrorMessage {
     private int status;
     private String statusMessage;
     private String errorMessage;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> validationErrors;
 
     public ErrorMessage(HttpServletRequest request, HttpStatus status, String errorMessage) {
