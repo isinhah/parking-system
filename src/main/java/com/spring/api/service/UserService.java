@@ -6,6 +6,7 @@ import com.spring.api.web.dto.UserCreateDto;
 import com.spring.api.web.dto.UserPasswordDto;
 import com.spring.api.web.dto.UserResponseDto;
 import com.spring.api.web.dto.mapper.UserMapper;
+import com.spring.api.web.exception.EntityNotFoundException;
 import com.spring.api.web.exception.UsernameUniqueViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,8 +36,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User not found")
-        );
+                () -> new EntityNotFoundException(String.format("User with id=%s not found", id)));
     }
 
     @Transactional(readOnly = true)
