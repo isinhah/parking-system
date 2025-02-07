@@ -4,6 +4,7 @@ import com.spring.api.entity.User;
 import com.spring.api.service.UserService;
 import com.spring.api.web.dto.UserCreateDto;
 import com.spring.api.web.dto.UserResponseDto;
+import com.spring.api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User userFound = userService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(userFound);
+        return ResponseEntity.status(HttpStatus.OK).body(UserMapper.INSTANCE.toDto(userFound));
     }
 
     @GetMapping
