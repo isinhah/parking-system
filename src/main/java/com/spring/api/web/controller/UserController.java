@@ -2,6 +2,8 @@ package com.spring.api.web.controller;
 
 import com.spring.api.entity.User;
 import com.spring.api.service.UserService;
+import com.spring.api.web.dto.UserCreateDto;
+import com.spring.api.web.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
-        User newUser = userService.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateDto createDto) {
+        UserResponseDto newUserResponse = userService.save(createDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUserResponse);
     }
 
     @GetMapping("/{id}")
