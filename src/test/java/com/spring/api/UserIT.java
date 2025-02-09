@@ -20,6 +20,36 @@ public class UserIT {
     private WebTestClient testClient;
 
     @Test
+    public void getUser_ByExistingId_ReturnsUserWithStatus200() {
+        UserResponseDto responseBody = testClient
+                .get()
+                .uri("/api/v1/users/100")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+        Assertions.assertThat(responseBody.getUsername()).isEqualTo("isabel@gmail.com");
+        Assertions.assertThat(responseBody.getRole()).isEqualTo("ADMIN");
+    }
+
+    @Test
+    public void getUser_ByNonExistingId_ReturnsErrorMessageWithStatus404() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/users/200")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+    }
+
+    @Test
     public void createUser_WithUsernameAndPassword_ReturnsCreatedWithStatus201() {
         UserResponseDto responseBody = testClient
                 .post()
