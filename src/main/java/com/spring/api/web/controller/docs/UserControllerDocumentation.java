@@ -68,9 +68,19 @@ public interface UserControllerDocumentation {
             description = "Update a user's password by their ID",
             responses = {
                     @ApiResponse(responseCode = "204",
-                            description = "Password updated successfully"),
+                            description = "Password updated successfully",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "400",
+                            description = "The passwords are different",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "404",
-                            description = "User not found",
+                            description = "Resource not found",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "422",
+                            description = "Invalid fields or fields that are not in the correct pattern",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorMessage.class)))
             }
