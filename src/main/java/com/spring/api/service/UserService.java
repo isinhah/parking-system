@@ -1,6 +1,7 @@
 package com.spring.api.service;
 
 import com.spring.api.entity.User;
+import com.spring.api.jwt.JwtUtils;
 import com.spring.api.repository.UserRepository;
 import com.spring.api.web.dto.UserCreateDto;
 import com.spring.api.web.dto.UserPasswordDto;
@@ -63,5 +64,15 @@ public class UserService {
         user = userRepository.save(user);
 
         return UserMapper.INSTANCE.toDto(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new EntityNotFoundException(String.format("User with username=%s not found", username)));
+    }
+
+    public User.Role findRoleByUsername(String username) {
+        return userRepository.findRoleByUsername(username);
     }
 }
