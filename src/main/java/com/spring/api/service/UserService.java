@@ -1,7 +1,6 @@
 package com.spring.api.service;
 
 import com.spring.api.entity.User;
-import com.spring.api.jwt.JwtUtils;
 import com.spring.api.repository.UserRepository;
 import com.spring.api.web.dto.UserCreateDto;
 import com.spring.api.web.dto.UserPasswordDto;
@@ -14,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDto save(UserCreateDto createDto) {
         User userToSave = UserMapper.INSTANCE.toUser(createDto);
+
+        userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
 
         try {
             User savedUser = userRepository.save(userToSave);
@@ -51,15 +54,15 @@ public class UserService {
     public UserResponseDto alterPassword(Long id, UserPasswordDto dto) {
         User user = findById(id);
 
-        if (!user.getPassword().equals(dto.getCurrentPassword())) {
-            throw new PasswordInvalidException("Current password is incorrect");
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new PasswordInvalidException("The password is incorrect");
         }
 
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new PasswordInvalidException("The passwords are different");
+            throw new PasswordInvalidException("The new passwords are different");
         }
 
-        user.setPassword(dto.getNewPassword());
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
 
         user = userRepository.save(user);
 
