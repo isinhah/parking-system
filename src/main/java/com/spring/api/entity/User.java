@@ -2,6 +2,9 @@ package com.spring.api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,6 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable {
 
     @Serial
@@ -24,14 +28,13 @@ public class User implements Serializable {
     private String username;
     @Column(nullable = false, length = 200)
     private String password;
+
+    @CreatedDate
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
+    @LastModifiedDate
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
-    @Column(name = "created_by")
-    private String createdBy;
-    @Column(name = "modified_by")
-    private String modifiedBy;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,length = 25)
@@ -40,16 +43,6 @@ public class User implements Serializable {
     public enum Role {
         ROLE_ADMIN,
         ROLE_CLIENTE
-    }
-
-    @PrePersist
-    private void PrePersist() {
-        this.createdDate = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    private void preUpdate() {
-        this.updatedDate = LocalDateTime.now();
     }
 
     @Override

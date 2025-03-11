@@ -19,8 +19,6 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(source = "username", target = "username")
     @Mapping(source = "password", target = "password")
     @Mapping(source = "role", target = "role", qualifiedByName = "stringToRole")
